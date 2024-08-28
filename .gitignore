@@ -1,0 +1,5 @@
+.idea
+gen_env/*
+*.DS_Store*
+__pycache__/
+*.pyo
