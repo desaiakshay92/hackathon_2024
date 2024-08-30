@@ -69,12 +69,10 @@ URI     : https://colorlib.com
     </header>
 
     <div class="client-logos my-5">
-        <div class="container text-center">
-            <img src="static/images/client-logos.png" alt="client logos" class="img-fluid">
-        </div>
     </div>
 
-    <div class="container">
+    <section class="centered-section">
+        <h2>Check it out how it works.</h2>
         <form id="uploadForm" enctype="multipart/form-data">
             <p>Upload a call recording to determine whether it is fraudulent or not.</p>
             <table>
@@ -86,7 +84,9 @@ URI     : https://colorlib.com
         </form>
         <div id="loader" class="loader" style="display: none;">We are analyzing the audio...</div>
         <p id="result"></p>
-    </div>
+        <button id="verifyFraud" style="display: none;">Verify as Fraud</button>
+        <button id="verifyNormal" style="display: none;">Verify as Normal</button>
+    </section>
 
     <div class="section light-bg" id="features">
 
@@ -546,10 +546,14 @@ URI     : https://colorlib.com
             let formData = new FormData(this);
             let resultElement = document.getElementById('result');
             let loader = document.getElementById('loader');
+            let verifyFraudButton = document.getElementById('verifyFraud');
+            let verifyNormalButton = document.getElementById('verifyNormal');
 
-            // Show the loader and hide the result
+            // Show the loader and hide the result and buttons
             loader.style.display = 'block';
             resultElement.style.display = 'none';
+            verifyFraudButton.style.display = 'none';
+            verifyNormalButton.style.display = 'none';
 
             let response = await fetch('/predict', {
                 method: 'POST',
@@ -571,9 +575,44 @@ URI     : https://colorlib.com
                 } else {
                     resultElement.className = 'result normal';
                 }
+
+                // Show the verification buttons
+                verifyFraudButton.style.display = 'inline-block';
+                verifyNormalButton.style.display = 'inline-block';
             }
+
+            verifyFraudButton.onclick = async function() {
+                await sendFeedback('fraud', result.text, result.prediction);
+            };
+
+            verifyNormalButton.onclick = async function() {
+                await sendFeedback('normal', result.text, result.prediction);
+            };
         };
+
+        async function sendFeedback(feedback, text, prediction) {
+            let feedbackData = {
+                correct_label: feedback,
+                text: text,
+                prediction: (prediction === "fraud" ? "fraud" : "normal") ,
+            };
+
+            let response = await fetch('/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(feedbackData)
+            });
+
+            if (response.ok) {
+                alert('Thank you for your feedback!');
+            } else {
+                alert('Error sending feedback.');
+            }
+        }
     </script>
+
 </body>
 
 </html>
