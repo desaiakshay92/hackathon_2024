@@ -31,6 +31,54 @@ Copyright © All rights Reserved
 /* GLOBAL
 ----------------------*/
 
+
+.centered-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 600px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.centered-section form {
+    margin-bottom: 20px;
+}
+
+.centered-section .loader {
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.centered-section #result {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.centered-section button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+}
+
+.centered-section button#verifyFraud {
+    background-color: #dc3545;
+}
+
+.centered-section button#verifyNormal {
+    background-color: #28a745;
+}
+
 body {
     font-family: 'Rubik', sans-serif;
     position: relative;

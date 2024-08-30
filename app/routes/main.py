@@ -32,4 +32,21 @@ def predict():
             except sr.RequestError as e:
                 return jsonify({'error': f'Could not request results from Google Speech Recognition service; {e}'})
     return jsonify({'error': 'No audio file found'})
-    
+
+@main.route('/feedback', methods=['POST'])
+def feedback():
+    data = request.json
+    print(data)
+    if not all(k in data for k in ('text', 'prediction', 'correct_label')):
+        return jsonify({'error': 'Invalid request format'}), 400
+
+    text = data['text']
+    prediction = data['prediction']
+    correct_label = data['correct_label']
+
+    x_input = preprocess_input(text)
+    y_input = 0 if correct_label == 'normal' else 1
+
+    model.partial_fit(x_input, [y_input], classes=[0, 1])
+
+    return jsonify({'message': 'Model updated with new data', 'new_prediction': predict_label(text, model)})

@@ -56,3 +56,4 @@ def predict_label(input_text, model):
     x_input = preprocess_input(input_text)
     prediction = model.predict(x_input)[0]
     return 'normal call' if prediction == 1 else 'fraud'
+
